@@ -17,6 +17,11 @@ The scripts below are tested on Oracle Cloud Compute instance (VM.Standard2.1 = 
 
 The data source is the CSV files in [the sample report folder](https://www.dropbox.com/s/z0s6adzg27wf3g4/reports-csv-1112.tgz?dl=0) linked from [this issue comment](https://github.com/oracle/graal/pull/2957#issuecomment-743175407). The mapping from CSV files (= tables) to graph is defined in the loading configuration file [`config.json`](./config.json).
 
+Please note that the numbers look slightly different from [the outputs here](https://github.com/oracle/graal/pull/2957#issuecomment-756227414) because:
+
+- The `Method` nodes are loaded from two CSV files (in both cases) 
+- The edges between `VM` and `Method` are not loaded in our case (= 544 potential edges). These can be added later if needed.
+
 ### JShell
 
 Start JShell
@@ -41,13 +46,13 @@ opg-jshell> graph.queryPgql(" SELECT LABEL(v), COUNT(v) FROM MATCH (v) GROUP BY 
 | Method   | 8863     |
 +---------------------+
 
-opg-jshell> graph.queryPgql(" SELECT LABEL(e), COUNT(e) FROM MATCH ()-[e]-() GROUP BY LABEL(e) ").print()
+opg-jshell> graph.queryPgql(" SELECT LABEL(e), COUNT(e) FROM MATCH ()-[e]->() GROUP BY LABEL(e) ").print()
 +-------------------------+
 | LABEL(e)     | COUNT(e) |
 +-------------------------+
-| virtual      | 11066    |
-| direct       | 37036    |
-| overriden_by | 5638     |
+| virtual      | 5533     |
+| direct       | 18554    |
+| overriden_by | 2819     |
 +-------------------------+
 
 /exit
@@ -74,13 +79,13 @@ PgxGraph(name: call_tree, v: 8864, e: 26906, directed: True, memory(Mb): 5)
 | Method   | 8863     |
 +---------------------+
 
->>> graph.query_pgql(" SELECT LABEL(e), COUNT(e) FROM MATCH ()-[e]-() GROUP BY LABEL(e) ").print()
+>>> graph.query_pgql(" SELECT LABEL(e), COUNT(e) FROM MATCH ()-[e]->() GROUP BY LABEL(e) ").print()
 +-------------------------+
 | LABEL(e)     | COUNT(e) |
 +-------------------------+
-| virtual      | 11066    |
-| direct       | 37036    |
-| overriden_by | 5638     |
+| virtual      | 5533     |
+| direct       | 18554    |
+| overriden_by | 2819     |
 +-------------------------+
 ```
 
