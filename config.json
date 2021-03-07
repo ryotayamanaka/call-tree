@@ -1,0 +1,82 @@
+{
+  "name": "call_tree",
+  "vertex_id_strategy": "unstable_generated_ids",
+  "edge_id_strategy": "unstable_generated_ids",
+  "vertex_providers":[{
+    "name": "VM",
+    "format": "csv",
+    "header": true,
+    "uris":["reports/csv_call_tree_vm_helloworld_20201211_112253.csv"],
+    "key_column": "Id",
+    "props":[
+      { "name": "Id", "type": "integer"},
+      { "name": "Name", "type": "string"}
+    ],
+    "loading": {
+      "create_key_mapping": false
+    }
+  }, {
+    "name": "Method",
+    "format": "csv",
+    "header": true,
+    "uris":[
+      "reports/csv_call_tree_methods_helloworld_20201211_112253.csv",
+      "reports/csv_call_tree_virtual_methods_helloworld_20201211_112253.csv"
+    ],
+    "key_column": "Id",
+    "props":[
+      { "name": "Id", "type": "integer"},
+      { "name": "Name", "type": "string"},
+      { "name": "Package", "type": "string"},
+      { "name": "Parameters", "type": "string"},
+      { "name": "Return", "type": "string"}
+    ],
+    "loading": {
+      "create_key_mapping": false
+    }
+  }],
+  "edge_providers":[{
+    "name": "direct",
+    "format": "csv",
+    "header": true,
+    "uris": ["reports/csv_call_tree_direct_edges_helloworld_20201211_112253.csv"],
+    "source_column" : "StartId",
+    "destination_column" : "EndId",
+    "source_vertex_provider": "Method",
+    "destination_vertex_provider": "Method",
+    "props": [
+      { "name": "bci", "type": "string", "column": "BytecodeIndexes" }
+    ],
+    "loading" : {
+      "create_key_mapping" : false
+    }
+  }, {
+    "name": "overriden_by",
+    "format": "csv",
+    "header": true,
+    "uris": ["reports/csv_call_tree_override_by_edges_helloworld_20201211_112253.csv"],
+    "source_column" : "StartId",
+    "destination_column" : "EndId",
+    "source_vertex_provider": "Method",
+    "destination_vertex_provider": "Method",
+    "props": [],
+    "loading" : {
+      "create_key_mapping" : false
+    }
+  }, {
+    "name": "virtual",
+    "format": "csv",
+    "header": true,
+    "uris": ["reports/csv_call_tree_virtual_edges_helloworld_20201211_112253.csv"],
+    "source_column" : "StartId",
+    "destination_column" : "EndId",
+    "source_vertex_provider": "Method",
+    "destination_vertex_provider": "Method",
+    "props": [
+      { "name": "bci", "type": "string", "column": "BytecodeIndexes" }
+    ],
+    "loading" : {
+      "create_key_mapping" : false
+    }
+  }]
+}
