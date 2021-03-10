@@ -1,0 +1,49 @@
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 2.799747943878174
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 3.665614366531372
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 3.488860845565796
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 2.807539224624634
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 2.8528687953948975
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 2.872763156890869
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 2.7073802947998047
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 3.335347890853882
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 3.3621881008148193
+>>> 
+[opc@oraclegraph-instance ~]$ sleep 1
+[opc@oraclegraph-instance ~]$ opgpy < loading.py
+Oracle Graph Server Shell 21.1.0
+>>> >>> >>> >>> >>> 2.7430074214935303
+>>>
