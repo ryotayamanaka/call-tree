@@ -6,9 +6,9 @@ This repository is for evaluating that **Oracle Graph Server** is useful for the
 
 ## Environment
 
-**Oracle Graph Server 21.1** should be ready with:
+**Oracle Graph Server 21.1** is available in the options below:
 
-- [RPM](https://www.oracle.com/database/technologies/spatialandgraph/property-graph-features/graph-server-and-client/graph-server-and-client-downloads.html) downloaded and installed (It is included in Oracle Database license)
+- [RPM](https://www.oracle.com/database/technologies/spatialandgraph/property-graph-features/graph-server-and-client/graph-server-and-client-downloads.html) downloaded and installed on your environment, **or**
 - [Marketplace image](https://cloudmarketplace.oracle.com/marketplace/en_US/listing/75067377) launched on Oracle Cloud
 
 The scripts below are tested on Oracle Cloud Compute instance (VM.Standard2.1 = 1 CPU / 15 GB memory). PGX is run in the stand-alone mode (not the server mode) and loading the graph data from files (not from relational database) here.
@@ -17,14 +17,35 @@ The scripts below are tested on Oracle Cloud Compute instance (VM.Standard2.1 = 
 
 The data source is the CSV files in [the sample report folder](https://www.dropbox.com/s/z0s6adzg27wf3g4/reports-csv-1112.tgz?dl=0) linked from [this issue comment](https://github.com/oracle/graal/pull/2957#issuecomment-743175407). The mapping from CSV files (= tables) to graph is defined in the loading configuration file [`config.json`](./config.json).
 
-Please note that the numbers look slightly different from [the outputs here](https://github.com/oracle/graal/pull/2957#issuecomment-756227414) because:
+Please note that one of the input files (`*_entry_points_*.csv`) is modified to include the VM IDs, so the n:m relationships can be properly loaded from this file, while this ID is always 0 in this case: 
+```sh
+sed 's/^/0,/' csv_call_tree_entry_points_helloworld_20201211_112253.csv \
+| sed '1s/0,Id/VMId,MethodId/' > csv_call_tree_entry_points_helloworld_20201211_112253_mod.csv
+```
 
-- The `Method` nodes are loaded from two CSV files (in both cases) 
-- The edges between `VM` and `Method` are not loaded in our case (= 544 potential edges). These can be added later if needed.
+`*_entry_points_*.csv` (original)
+```
+Id
+0
+1
+2
+```
+
+
+`*_entry_points_*_mod.csv` (modified)
+```
+VMId,MethodId
+0,0
+0,1
+0,2
+```
+
+
+Please also note that the `Method` nodes are loaded from two CSV files, and the sum of them (8863 = 7509 + 1354) is shown in the output below. You can find the numbers of nodes and edges are the same in [the outputs here](https://github.com/oracle/graal/pull/2957#issuecomment-756227414).
 
 ### JShell
 
-Start JShell
+Start JShell:
 ```
 $ opg-jshell
 13:09:25,159 INFO Ctrl$1 - >>> start engine
@@ -34,6 +55,7 @@ Variables instance, session, and analyst ready to use.
 opg-jshell>
 ```
 
+Load the dataset into a graph and count the numbers of nodes and edges:
 ```java
 opg-jshell> var graph = session.readGraphWithProperties("./config.json")
 graph ==> PgxGraph[name=call_tree,N=8864,E=26906,created=1615122575811]
@@ -60,15 +82,17 @@ opg-jshell> graph.queryPgql(" SELECT LABEL(e), COUNT(e) FROM MATCH ()-[e]->() GR
 
 ### Python
 
-Start Python shell
+Start Python shell:
 ```
 $ opgpy
 Oracle Graph Server Shell 21.1.0
 >>>
 ```
 
+Load the dataset into a graph and count the numbers of nodes and edges:
 ```python
 >>> graph = session.read_graph_with_properties("./config.json")
+>>> graph
 PgxGraph(name: call_tree, v: 8864, e: 26906, directed: True, memory(Mb): 5)
 
 >>> graph.query_pgql(" SELECT LABEL(v), COUNT(v) FROM MATCH (v) GROUP BY LABEL(v) ").print()
@@ -89,9 +113,10 @@ PgxGraph(name: call_tree, v: 8864, e: 26906, directed: True, memory(Mb): 5)
 +-------------------------+
 ```
 
+
 ### Performance
 
-Measure the loading time of the graph
+Measure the loading time of the graph:
 ```python
 import time
 start = time.time()
@@ -99,6 +124,8 @@ graph = session.read_graph_with_properties("./config.json")
 end = time.time()
 print(end - start)
 ```
+
+Output:
 ```
 2.9235193729400635
 ```
@@ -173,7 +200,7 @@ WHERE m.name = 'getAndBitwiseOrInt'
 
 ## Appendix: Original Vertex IDs
 
-The original vertex IDs can be confirmed, for the edges connecting those vertices.
+The original IDs of the vertices, which are connected by the edges, can be shown using the queries below:
 
 ```sql
 -- direct edges
